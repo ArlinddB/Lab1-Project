@@ -40,3 +40,14 @@ food_price float
 insert into food values('Fastfood', 'Hamburger', '1.3')
 
 select * from food
+
+create table drinks (
+drink_id int primary key identity,
+drink_type varchar(150),
+drink_name varchar(150),
+drink_price float
+)
+
+insert into drinks values('Non-alcoholic', 'Coca-cola', '1.00');
+
+select * from drinks
