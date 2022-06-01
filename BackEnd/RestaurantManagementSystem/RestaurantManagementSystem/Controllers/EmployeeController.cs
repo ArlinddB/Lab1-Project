@@ -17,152 +17,62 @@ namespace RestaurantManagementSystem.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-        private readonly IWebHostEnvironment _env;
+        private readonly DataContext _context;
 
-        public EmployeeController(IConfiguration configuration, IWebHostEnvironment env)
+
+        public EmployeeController(DataContext context)
         {
-            _configuration = configuration;
-            _env = env;
+            _context = context;
         }
 
         [HttpGet]
-        public JsonResult Get()
+        public async Task<ActionResult<List<Employee>>> Get()
         {
-            string query = @"
-                    select e_id, e_name, e_username, e_password, e_phone,
-                    e_address, convert(varchar(10), DateOfJoining,120) as DateOfJoining, e_roleID from dbo.employee";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-
-            return new JsonResult(table);
+            var emps = await _context.Employees.ToListAsync();
+            return Ok(emps);
         }
 
         [HttpPost]
-        public JsonResult Post(Employee e)
+        public async Task<ActionResult<List<Employee>>> AddEmployee(Employee emp)
         {
-            string query = @"
-                    insert into dbo.employee 
-                    (e_name, e_username, e_password, e_phone, e_address, DateOfJoining, e_roleID)
-                    values (
-                    '" + e.e_name + @"',
-                    '" + e.e_username + @"',
-                    '" + e.e_password + @"',
-                    '" + e.e_phone + @"',
-                    '" + e.e_address + @"',
-                    '" + e.DateOfJoining + @"',
-                    '" + e.e_roleID + @"'
-                    )";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-
-            return new JsonResult("Added Successfully");
+            var addEmp = _context.Employees.Add(emp);
+            await _context.SaveChangesAsync();
+            if (addEmp == null)
+                return Ok("Failed");
+            return Ok("Added succesfuly");
         }
 
         [HttpPut]
-        public JsonResult Put(Employee e)
+        public async Task<ActionResult<List<Employee>>> UpdateEmp(Employee emp)
         {
-            string query = @"
-                    update dbo.employee set 
-                    e_name = '" + e.e_name + @"',
-                    e_username = '" + e.e_username + @"',
-                    e_password = '" + e.e_password + @"',
-                    e_phone = '" + e.e_phone + @"',
-                    e_address = '" + e.e_address + @"',
-                    DateOfJoining = '" + e.DateOfJoining + @"',
-                    e_roleID = '" + e.e_roleID + @"'
-                    where e_id = " + e.e_id + @"";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
+            var empUpdate = await _context.Employees.FindAsync(emp.e_id);
+            if (empUpdate == null)
+                return BadRequest("Employee not found.");
 
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-            return new JsonResult("Updated Successfully");
+            empUpdate.e_name = emp.e_name;
+            empUpdate.e_username = emp.e_username;
+            empUpdate.e_password = emp.e_password;
+            empUpdate.e_phone = emp.e_phone;
+            empUpdate.e_address = emp.e_address;
+            empUpdate.DateOfJoining = emp.DateOfJoining;
+            empUpdate.e_roleID = emp.e_roleID;
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Updated successfuly");
         }
 
         [HttpDelete("{id}")]
-        public JsonResult Delete(int id)
+        public async Task<ActionResult<List<Roles>>> DeleteEmp(int id)
         {
-            string query = @"
-                    delete from dbo.employee where e_id = " + id + @"";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
+            var empDelete = await _context.Employees.FindAsync(id);
+            if (empDelete == null)
+                return BadRequest("Role not found.");
 
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-            return new JsonResult("Deleted Successfully");
-        }
+            _context.Employees.Remove(empDelete);
+            await _context.SaveChangesAsync();
 
-        [Route("GetAllRoles")]
-        [HttpGet]
-
-        public JsonResult GetAllRoleNames()
-        {
-            string query = @"
-                    select r_id, r_name from dbo.roles";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-
-            return new JsonResult(table);
+            return Ok("Deleted successfuly");
         }
     }
 }
