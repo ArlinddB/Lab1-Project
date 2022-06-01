@@ -1,10 +1,8 @@
 import { NavLink } from "react-router-dom";
-import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser } from "react-icons/fa";
-import { MdMessage } from "react-icons/md";
-import { BiAnalyse, BiSearch } from "react-icons/bi";
-import { BiCog } from "react-icons/bi";
-import { AiFillHeart, AiTwotoneFileExclamation } from "react-icons/ai";
-import { BsCartCheck } from "react-icons/bs";
+import { FaBars, FaHome, FaUser, FaUserCog, FaUtensils } from "react-icons/fa";
+
+import { BiDrink, BiTask } from "react-icons/bi";
+
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SidebarMenu from "./SidebarMenu";
@@ -15,45 +13,40 @@ const routes = [
     icon: <FaHome />,
   },
   {
-    path: "/roles",
-    name: "roles",
-    icon: <FaUser />,
-  },
-  {
-    path: "/employee",
-    name: "Employee",
-    icon: <FaUser />,
-  },
-  {
     path: "/food",
     name: "Food",
-    icon: <BiAnalyse />,
+    icon: <FaUtensils />,
   },
   {
     path: "/drinks",
     name: "Drinks",
-    icon: <AiTwotoneFileExclamation />,
+    icon: <BiDrink />,
   },
   {
     path: "/",
     name: "Manage",
-    icon: <BiCog />,
+    icon: <BiTask />,
     exact: true,
     subRoutes: [
       {
-        path: "/settings/profile",
-        name: "Profile ",
+        path: "/manage/roles",
+        name: "Roles",
         icon: <FaUser />,
       },
       {
-        path: "/settings/2fa",
-        name: "2FA",
-        icon: <FaLock />,
+        path: "/manage/employee",
+        name: "Employees ",
+        icon: <FaUserCog />,
       },
       {
-        path: "/settings/billing",
-        name: "Billing",
-        icon: <FaMoneyBill />,
+        path: "/manage/food",
+        name: "Food",
+        icon: <FaUtensils />,
+      },
+      {
+        path: "/manage/drinks",
+        name: "Drinks",
+        icon: <BiDrink />,
       },
     ],
   },
@@ -62,22 +55,6 @@ const routes = [
 const SideBar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-  const inputAnimation = {
-    hidden: {
-      width: 0,
-      padding: 0,
-      transition: {
-        duration: 0.2,
-      },
-    },
-    show: {
-      width: "140px",
-      padding: "5px 15px",
-      transition: {
-        duration: 0.2,
-      },
-    },
-  };
 
   const showAnimation = {
     hidden: {
@@ -121,7 +98,7 @@ const SideBar = ({ children }) => {
                   exit="hidden"
                   className="logo"
                 >
-                  RMS
+                  <a href='/'>RMS</a>
                 </motion.h1>
               )}
             </AnimatePresence>
@@ -149,7 +126,7 @@ const SideBar = ({ children }) => {
                   to={route.path}
                   key={index}
                   className="link"
-                  // activeClassName="active"
+                  activeClassName="active"
                 >
                   <div className="icon">{route.icon}</div>
                   <AnimatePresence>
