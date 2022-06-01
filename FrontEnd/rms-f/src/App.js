@@ -1,59 +1,45 @@
-import logo from './logo.svg';
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 import './App.css';
  import {Home} from './Home';
- import {Roles} from './Roles';
- import {Employee} from './Employee';
- import {Food} from './Food';
-import {Navigation} from './Navigation';
+ import {ManageRoles} from './components/Manage/ManageRoles';
+ import {ManageEmployee} from './components/Manage/ManageEmployee';
+ import {ManageFood} from './components/Manage/ManageFood';
+ import {ManageDrinks} from './components/Manage/ManageDrinks';
 import SideBar from "./components/Sidebar/SideBar";
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {Login} from "./components/Login/Login";
+
+import {BrowserRouter, Route, Switch } from 'react-router-dom';
+
+
 
 function App() {
+  
   return (
-
+    
+  <div className="d-flex">
     <BrowserRouter>
-
-    <div className="d-flex">
-
     <SideBar/>
 
+      
      <Switch>
-       <Route path='/' component={Home} exact/>
-       <Route path='/roles' component={Roles}/>
-       <Route path='/employee' component={Employee}/>
-       <Route path='/food' component={Food}/>
+     <Route path='/login' component={Login}/>
+
+        <Route path='/' exact component={Home} exact/>
+        <Route path='/manage/roles' component={ManageRoles}/>
+        <Route path='/manage/employee' component={ManageEmployee}/>
+        <Route path='/manage/food' component={ManageFood}/>
+        <Route path='/manage/drinks' component={ManageDrinks}/>
+
+       <Route path='*' component={() => <h1>Not Found</h1>} />
      </Switch>
-    </div>
 
     </BrowserRouter>
-  );
+
+     
+
+  </div>
+  
+);
 }
 
-export default App;
-
-
-// import "./App.css";
-// import SideBar from "./components/Sidebar/SideBar";
-// import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
-
-// function App() {
-//   return (
-//     <Router>
-//       <SideBar>
-//         <Switch>
-//           <Route path="/" element={<Home />} />
-//           <Route path="/roles" element={<Roles />} />
-//           <Route path="/employee" element={<Employee />} />
-//           <Route path="/food" element={<Food />} />
-          
-
-//           <Route path="*" element={<> not found</>} />
-//         </Switch>
-//       </SideBar>
-//     </Router>
-//   );
-// }
-
-// export default App;
+export default App; 

@@ -20,7 +20,7 @@ main {
 /* Sidebar */
 .sidebar {
   background: rgb(0, 7, 61);
-  color: white;
+  color: #fff;
   height: 100vh;
   overflow-y: auto;
 }
@@ -34,6 +34,12 @@ main {
 .logo {
   font-size: 18px;
   line-height: 0;
+  margin-top: 12px;
+}
+.logo a{
+  color: #fff;
+  text-decoration: none;
+  
 }
 .bars {
   width: 30px;
@@ -55,6 +61,7 @@ main {
   padding: 5px 10px;
   border-right: 4px solid transparent;
   transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  margin-top: 3px;
 }
 .link:hover {
   border-right: 4px solid white;
@@ -62,15 +69,17 @@ main {
   transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
   text-decoration: none;
 }
-.active {
-  border-right: 4px solid white;
-  background: rgb(45, 51, 89);
-}
+
+
 .link_text {
   white-space: nowrap;
   font-size: 15px;
+  margin-top: 3px;
 }
-
+.link:focus, .link:active{
+  border-right: 4px solid white;
+  background: rgb(45, 51, 89);
+}
 .menu {
   display: flex;
   color: white;
@@ -91,4 +100,19 @@ main {
 .menu_container .link {
   padding-left: 20px;
   border-bottom: #fff 0.5px solid;
+}
+/* Login */
+.loginContainer{
+  background-color: #fafafa;
+  width: 380px;
+  height: 380px;
+  margin: auto;
+  padding: 25px; 
+  border-radius: 20px;
+  box-shadow: 0px 10px 15px rgba(69, 69, 71, 0.3);
+
+}
+
+.loginBtn{
+  border-radius: 30px; 
 }
