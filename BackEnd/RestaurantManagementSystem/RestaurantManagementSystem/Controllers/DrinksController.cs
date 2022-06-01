@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System.Data;
-using System.Data.SqlClient;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using RestaurantManagementSystem.Models;
-
 
 namespace RestaurantManagementSystem.Controllers
 {
@@ -11,115 +12,60 @@ namespace RestaurantManagementSystem.Controllers
     [ApiController]
     public class DrinksController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
+        private readonly DataContext _context;
 
-        public DrinksController(IConfiguration configuration)
+
+        public DrinksController(DataContext context)
         {
-            _configuration = configuration;
+            _context = context;
         }
 
         [HttpGet]
-        public JsonResult Get()
+        public async Task<ActionResult<List<Drinks>>> Get()
         {
-            string query = @"
-                    select drink_id, drink_type, drink_name, drink_price  from dbo.drinks";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-
-            return new JsonResult(table);
+            var drinks = await _context.Drinks.ToListAsync();
+            return Ok(drinks);
         }
 
         [HttpPost]
-        public JsonResult Post(Drinks d)
+        public async Task<ActionResult<List<Drinks>>> AddDrink(Drinks d)
         {
-            string query = @"
-                    insert into dbo.drinks 
-                    (drink_type, drink_name, drink_price)
-                    values (
-                    '" + d.drink_type + @"',
-                    '" + d.drink_name + @"',
-                    '" + d.drink_price + @"'
-                    )";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-
-            return new JsonResult("Added Successfully");
+            var addDrink = _context.Drinks.Add(d);
+            await _context.SaveChangesAsync();
+            if (addDrink == null)
+                return Ok("Failed");
+            return Ok("Added succesfuly");
         }
 
-        [HttpPut]
-        public JsonResult Put(Drinks d)
-        {
-            string query = @"
-                    update dbo.drinks set 
-                    drink_type = '" + d.drink_type + @"',
-                    drink_name = '" + d.drink_name + @"',
-                    drink_price = '" + d.drink_price + @"'
-                    where drink_id = " + d.drink_id + @"";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
 
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-            return new JsonResult("Updated Successfully");
+        [HttpPut]
+        public async Task<ActionResult<List<Drinks>>> UpdateDrink(Drinks d)
+        {
+            var drinkUpdate = await _context.Drinks.FindAsync(d.drink_id);
+            if (drinkUpdate == null)
+                return BadRequest("Drink not found.");
+
+            drinkUpdate.drink_type = d.drink_type;
+            drinkUpdate.drink_name = d.drink_name;
+            drinkUpdate.drink_price =d.drink_price;
+
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Updated successfuly");
         }
 
         [HttpDelete("{id}")]
-        public JsonResult Delete(int id)
+        public async Task<ActionResult<List<Drinks>>> DeleteDrink(int id)
         {
-            string query = @"
-                    delete from dbo.drinks where drink_id = " + id + @"";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
+            var drinkDelete = await _context.Drinks.FindAsync(id);
+            if (drinkDelete == null)
+                return BadRequest("Food not found.");
 
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-            return new JsonResult("Deleted Successfully");
+            _context.Drinks.Remove(drinkDelete);
+            await _context.SaveChangesAsync();
+
+            return Ok("Deleted successfuly");
         }
     }
 }

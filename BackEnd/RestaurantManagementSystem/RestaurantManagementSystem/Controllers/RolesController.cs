@@ -4,9 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System.Data.SqlClient;
-using System.Data;
 using RestaurantManagementSystem.Models;
 
 namespace RestaurantManagementSystem.Controllers
@@ -15,107 +12,59 @@ namespace RestaurantManagementSystem.Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
+        private readonly DataContext _context;
 
-        public RolesController(IConfiguration configuration)
+
+        public RolesController(DataContext context)
         {
-            _configuration = configuration;
+            _context = context;
         }
 
         [HttpGet]
-        public JsonResult Get()
+
+        public async Task<ActionResult<List<Roles>>> Get()
         {
-            string query = @"
-                    select r_id, r_name from dbo.roles";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-
-            return new JsonResult(table);
+            var roles = await _context.Roles.ToListAsync();
+            return Ok(roles);
         }
-
+       
         [HttpPost]
-        public JsonResult Post(Roles r)
+        public async Task<ActionResult<List<Roles>>> AddRole(Roles role)
         {
-            string query = @"
-                    insert into dbo.roles values
-                    ('" + r.r_name + @"')";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-
-            return new JsonResult("Added Successfully");
+            var addRole = _context.Roles.Add(role);
+            await _context.SaveChangesAsync();
+            if(addRole == null)
+                return Ok("Failed");
+            return Ok("Added succesfuly");
         }
+
 
         [HttpPut]
-        public JsonResult Put(Roles r)
+        public async Task<ActionResult<List<Roles>>> UpdateHero(Roles role)
         {
-            string query = @"
-                    update dbo.roles set r_name = '" + r.r_name + @"'
-                    where r_id = " + r.r_id + @"";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
+            var roleUpdate = await _context.Roles.FindAsync(role.r_id);
+            if (roleUpdate == null)
+                return BadRequest("Role not found.");
 
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-            return new JsonResult("Updated Successfully");
+            roleUpdate.r_name = role.r_name;
+            
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Updated successfuly");
         }
 
         [HttpDelete("{id}")]
-        public JsonResult Delete(int id)
+        public async Task<ActionResult<List<Roles>>> DeleteHero(int id)
         {
-            string query = @"
-                    delete from dbo.roles where r_id = " + id + @"";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
+            var roleDelete = await _context.Roles.FindAsync(id);
+            if (roleDelete == null)
+                return BadRequest("Role not found.");
 
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-            return new JsonResult("Deleted Successfully");
+            _context.Roles.Remove(roleDelete);
+            await _context.SaveChangesAsync();
+
+            return Ok("Deleted successfuly");
         }
     }
 }
