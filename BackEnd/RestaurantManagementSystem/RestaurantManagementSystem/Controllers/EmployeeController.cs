@@ -10,11 +10,14 @@ using System.Data;
 using RestaurantManagementSystem.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RestaurantManagementSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class EmployeeController : ControllerBase
     {
         private readonly DataContext _context;
@@ -24,6 +27,7 @@ namespace RestaurantManagementSystem.Controllers
         {
             _context = context;
         }
+
 
         [HttpGet]
         public async Task<ActionResult<List<Employee>>> Get()
