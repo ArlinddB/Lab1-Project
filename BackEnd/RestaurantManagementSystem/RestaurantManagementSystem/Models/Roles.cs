@@ -5,8 +5,8 @@ namespace RestaurantManagementSystem.Models
     public class Roles
     {
         [Key]
-        public int r_id { get; set; }
-        public string r_name { get; set; }
+        public int roleId { get; set; }
+        public string roleName { get; set; }
 
     }
 }

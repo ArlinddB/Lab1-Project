@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace RestaurantManagementSystem.Models
 {
@@ -13,12 +14,15 @@ namespace RestaurantManagementSystem.Models
         public string e_phone { get; set; }
         public string e_address { get; set; }
 
-        [DataType(DataType.Date)]
-        [Column(TypeName = "Date")]
-        public DateTime DateOfJoining { get; set; }
-        //public string DateOfJoining { get; set; }
-        [ForeignKey("Roles")]
-        public int e_roleID { get; set; }
-        public virtual Roles Roles { get; set; }
+        //[DataType(DataType.Date)]
+        //[Column(TypeName = "Date")]
+        //public DateTime DateOfJoining { get; set; }
+        public string DateOfJoining { get; set; }
+        [JsonIgnore]
+
+        [ForeignKey("Role")]
+        public int RoleId { get; set; }
+
+        public virtual Roles Role { get; set; }
     }
 }
