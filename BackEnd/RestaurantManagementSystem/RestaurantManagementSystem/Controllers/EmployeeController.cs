@@ -32,24 +32,37 @@ namespace RestaurantManagementSystem.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Employee>>> Get()
         {
-            var emps = await _context.Employees.ToListAsync();
+            var emps = await _context.Employees
+                .Include(c => c.Role)
+                .AsNoTracking()
+                .ToListAsync();
+            return Ok(emps);
+        }
+
+        [HttpGet("{empId}")]
+        public async Task<ActionResult<List<Employee>>> GetEmpById(int empId)
+        {
+            var emps = await _context.Employees.FirstOrDefaultAsync(c => c.e_id == empId);
             return Ok(emps);
         }
 
         [HttpPost]
         public async Task<ActionResult<List<Employee>>> AddEmployee(Employee emp)
         {
-            var addEmp = _context.Employees.Add(emp);
+            if (emp == null)
+                return BadRequest();
+
+            _context.Entry(emp.Role).State = EntityState.Unchanged;
+            _context.Employees.Add(emp);
             await _context.SaveChangesAsync();
-            if (addEmp == null)
-                return Ok("Failed");
+           
             return Ok("Added succesfuly");
         }
 
-        [HttpPut]
-        public async Task<ActionResult<List<Employee>>> UpdateEmp(Employee emp)
+        [HttpPut("{empId}")]
+        public async Task<ActionResult<List<Employee>>> UpdateEmp(int empId, Employee emp)
         {
-            var empUpdate = await _context.Employees.FindAsync(emp.e_id);
+            var empUpdate = await _context.Employees.FirstOrDefaultAsync(e => e.e_id == empId);
             if (empUpdate == null)
                 return BadRequest("Employee not found.");
 
@@ -59,7 +72,8 @@ namespace RestaurantManagementSystem.Controllers
             empUpdate.e_phone = emp.e_phone;
             empUpdate.e_address = emp.e_address;
             empUpdate.DateOfJoining = emp.DateOfJoining;
-            empUpdate.e_roleID = emp.e_roleID;
+            empUpdate.roleId = emp.roleId;
+            empUpdate.Role = emp.Role;
 
             await _context.SaveChangesAsync();
 
