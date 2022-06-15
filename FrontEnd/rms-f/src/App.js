@@ -1,45 +1,62 @@
 import React, { Component, useState, useEffect } from "react";
-import './App.css';
- import {Home} from './Home';
- import {ManageRoles} from './components/Manage/ManageRoles';
- import {ManageEmployee} from './components/Manage/ManageEmployee';
- import {ManageFood} from './components/Manage/ManageFood';
- import {ManageDrinks} from './components/Manage/ManageDrinks';
-import SideBar from "./components/Sidebar/SideBar";
-import {Login} from "./components/Login/Login";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import "./App.css";
 
-import {BrowserRouter, Route, Switch } from 'react-router-dom';
+import Dashboard from "./Dashboard";
+import { Login } from "./components/Login/Login";
+
+import ManageRoles from "./components/Roles/ManageRoles";
+import ManageEmployee from "./components/Employee/ManageEmployee";
+
+import FoodCategories from "./components/Food/FoodCategories";
+import Pasta from "./components/Food/Pasta/Pasta";
+import SeaFood from "./components/Food/SeaFood/SeaFood";
+import FastFood from "./components/Food/Fast Food/FastFood";
+import TraditionalFood from "./components/Food/TraditionalFood/TraditionalFood";
+
+import DrinkCategories from "./components/Drinks/DrinkCategories";
+import AlcoholicDrinks from "./components/Drinks/AlcoholicDrinks/AlcoholicDrinks";
+import NonAlcoholicDrinks from "./components/Drinks/NonAlcoholicDrinks/NonAlcoholicDrinks";
+import ColdDrinks from "./components/Drinks/ColdDrinks/ColdDrinks";
+import HotDrinks from "./components/Drinks/HotDrinks/HotDrinks";
+
+import Tables from "./components/Table/Tables"
+import Reservation from "./components/Reservation/Reservation";
 
 
 
 function App() {
-  
   return (
-    
-  <div className="d-flex">
-    <BrowserRouter>
-    <SideBar/>
+    <div className="d-flex">
+      <BrowserRouter>
+        {/* <SideBar /> */}
 
-      
-     <Switch>
-     <Route path='/login' component={Login}/>
 
-        <Route path='/' exact component={Home} exact/>
-        <Route path='/manage/roles' component={ManageRoles}/>
-        <Route path='/manage/employee' component={ManageEmployee}/>
-        <Route path='/manage/food' component={ManageFood}/>
-        <Route path='/manage/drinks' component={ManageDrinks}/>
+        <Switch>
+          <Route path="/login" component={Login} />
 
-       <Route path='*' component={() => <h1>Not Found</h1>} />
-     </Switch>
+          <Route path="/" component={Dashboard} exact />
+          <Route path="/manage/roles" component={ManageRoles} />
+          <Route path="/manage/employee" component={ManageEmployee} />
+          <Route path="/foodcategories" component={FoodCategories} />
+          <Route path="/pasta" component={Pasta} />
+          <Route path="/seafood" component={SeaFood} />
+          <Route path="/fastfood" component={FastFood} />
+          <Route path="/traditionalfood" component={TraditionalFood} />
+          <Route path="/drinkcategories" component={DrinkCategories} />
+          <Route path="/alcoholicdrinks" component={AlcoholicDrinks} />
+          <Route path="/nonalcoholicdrinks" component={NonAlcoholicDrinks} />
+          <Route path="/colddrinks" component={ColdDrinks} />
+          <Route path="/hotdrinks" component={HotDrinks} />
+          <Route path="/tables" component={Tables} />
+          <Route path="/reservation" component={Reservation} />
 
-    </BrowserRouter>
-
-     
-
-  </div>
-  
-);
+          
+          <Route path="*" component={() => <h1>Not Found</h1>} />
+        </Switch>
+      </BrowserRouter>
+    </div>
+  );
 }
 
-export default App; 
+export default App;
