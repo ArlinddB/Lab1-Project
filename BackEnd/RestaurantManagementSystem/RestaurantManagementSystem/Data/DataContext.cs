@@ -2,6 +2,8 @@
 using RestaurantManagementSystem.Models;
 using RestaurantManagementSystem.Models.DrinksModels;
 using RestaurantManagementSystem.Models.FoodModels;
+using RestaurantManagementSystem.Models.ReservationModel;
+using RestaurantManagementSystem.Models.TableModel;
 
 namespace RestaurantManagementSystem.Data
 {
@@ -23,8 +25,19 @@ namespace RestaurantManagementSystem.Data
 
         public DbSet<TraditionalFood> TraditionalFoods { get; set; }
 
-        
+        public DbSet<DrinksCategory> DrinksCategories { get; set; }
 
+        public DbSet<NonAlcoholicDrink> NonAlcoholicDrinks { get; set; }
+
+        public DbSet<AlcoholicDrink> AlcoholicDrinks { get; set; }   
+
+        public DbSet<ColdDrink> ColdDrinks { get; set; }
+
+        public DbSet<HotDrink> HotDrinks { get; set; }
+
+        public DbSet<Table> Tables { get; set; } 
+
+        public DbSet<Reservation> Reservations { get; set; }
        
     }
 }
