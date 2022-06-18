@@ -154,3 +154,14 @@ main {
   font-size: x-large;
   color: #fff;
 }
+
+.logout_text{
+  margin-left: 40px;
+  margin-top: -31px;
+}
+
+.logoutBtn{
+  font-size: 22px;
+  margin-top: 60vh;
+  margin-left: 7px;
+}
