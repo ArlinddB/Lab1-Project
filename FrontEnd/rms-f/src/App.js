@@ -1,9 +1,9 @@
-import React, { Component, useState, useEffect } from "react";
+import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.css";
 
 import Dashboard from "./Dashboard";
-import { Login } from "./components/Login/Login";
+import Login from "./components/Login/Login";
 
 import ManageRoles from "./components/Roles/ManageRoles";
 import ManageEmployee from "./components/Employee/ManageEmployee";
@@ -13,6 +13,7 @@ import Pasta from "./components/Food/Pasta/Pasta";
 import SeaFood from "./components/Food/SeaFood/SeaFood";
 import FastFood from "./components/Food/Fast Food/FastFood";
 import TraditionalFood from "./components/Food/TraditionalFood/TraditionalFood";
+import Salads from "./components/Food/Salads/Salads";
 
 import DrinkCategories from "./components/Drinks/DrinkCategories";
 import AlcoholicDrinks from "./components/Drinks/AlcoholicDrinks/AlcoholicDrinks";
@@ -33,9 +34,9 @@ function App() {
 
 
         <Switch>
-          <Route path="/login" component={Login} />
+          <Route path="/" component={Login} exact/>
 
-          <Route path="/" component={Dashboard} exact />
+          <Route path="/dashboard" component={Dashboard} />
           <Route path="/manage/roles" component={ManageRoles} />
           <Route path="/manage/employee" component={ManageEmployee} />
           <Route path="/foodcategories" component={FoodCategories} />
@@ -43,6 +44,7 @@ function App() {
           <Route path="/seafood" component={SeaFood} />
           <Route path="/fastfood" component={FastFood} />
           <Route path="/traditionalfood" component={TraditionalFood} />
+          <Route path="/salads" component={Salads} />
           <Route path="/drinkcategories" component={DrinkCategories} />
           <Route path="/alcoholicdrinks" component={AlcoholicDrinks} />
           <Route path="/nonalcoholicdrinks" component={NonAlcoholicDrinks} />

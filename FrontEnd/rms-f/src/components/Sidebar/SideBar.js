@@ -87,6 +87,11 @@ const routes = [
         name: "Traditional Food",
         icon: <FaUtensils />,
       },
+      {
+        path: "/salads",
+        name: "Salads",
+        icon: <FaUtensils />,
+      },
     ],
   },
   {
