@@ -36,10 +36,9 @@ main {
   line-height: 0;
   margin-top: 12px;
 }
-.logo a{
+.logo a {
   color: #fff;
   text-decoration: none;
-  
 }
 .bars {
   width: 30px;
@@ -70,13 +69,13 @@ main {
   text-decoration: none;
 }
 
-
 .link_text {
   white-space: nowrap;
   font-size: 15px;
   margin-top: 3px;
 }
-.link:focus, .link:active{
+.link:focus,
+.link:active {
   border-right: 4px solid white;
   background: rgb(45, 51, 89);
 }
@@ -102,17 +101,69 @@ main {
   border-bottom: #fff 0.5px solid;
 }
 /* Login */
-.loginContainer{
+.loginContainer {
   background-color: #fafafa;
   width: 380px;
   height: 380px;
-  margin: auto;
-  padding: 25px; 
+  margin-top: 180px;
+  padding: 20px;
   border-radius: 20px;
   box-shadow: 0px 10px 15px rgba(69, 69, 71, 0.3);
-
 }
 
-.loginBtn{
-  border-radius: 30px; 
+.loginBtn {
+  border-radius: 30px;
+}
+
+/* Dashboard */
+.dashboardBoxes, .rows {
+  margin-top: 3%;
+}
+.box {
+  height: 190px;
+  width: 190px;
+  background-color: rgb(0, 7, 61);
+  border-radius: 10px;
+  box-shadow: 0px 5px 25px #c4c4c4;  
+}
+
+.box:hover{
+  box-shadow: 0px 10px 22px #868686;  
+  transition: .2s ease-in-out;
+}
+
+.icons {
+  position: relative;
+  left: 38%;
+  top: 22%;
+  color: #fff;
+  font-size: 45px;
+}
+
+.boxText {
+  /* font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif; */
+  float: center;
+  text-align: center;
+  color: #fff;
+}
+.boxNr {
+  /* font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif; */
+  text-align: center;
+  margin-top: 44px;
+  float: center;
+  font-size: x-large;
+  color: #fff;
+}
+
+.logout_text{
+  margin-left: 40px;
+  margin-top: -31px;
+  cursor: pointer;
+}
+
+.logoutBtn{
+  font-size: 22px;
+  margin-top: 60vh;
+  margin-left: 9px;
+  cursor: pointer;
 }
