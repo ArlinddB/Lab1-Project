@@ -1,5 +1,6 @@
 ﻿global using Microsoft.EntityFrameworkCore;
 using RestaurantManagementSystem.Models;
+//using RestaurantManagementSystem.Models.User;
 
 namespace RestaurantManagementSystem.Data
 {
@@ -14,5 +15,6 @@ namespace RestaurantManagementSystem.Data
 
         public DbSet<Drinks> Drinks { get; set; }
 
+        public DbSet<User> Users { get; set; }
     }
 }
