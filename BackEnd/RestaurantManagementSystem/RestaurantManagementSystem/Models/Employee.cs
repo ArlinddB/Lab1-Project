@@ -14,10 +14,6 @@ namespace RestaurantManagementSystem.Models
         public string e_password { get; set; }
         public string e_phone { get; set; }
         public string e_address { get; set; }
-
-        //[DataType(DataType.Date)]
-        //[Column(TypeName = "Date")]
-        //public DateTime DateOfJoining { get; set; }
         public string DateOfJoining { get; set; }
 
         [ForeignKey("roleId")]
