@@ -5,14 +5,14 @@ import axios from "axios";
 
 
 
-function AddFoodCategories() {
+function AddRoles() {
 
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const [categoryName, setCategoryName] = useState();
+  const [roleName, setRoleName] = useState();
 
   const config = {
     headers: {
@@ -20,10 +20,11 @@ function AddFoodCategories() {
     }
   }
 
-  const addCategory = async () => {
+  const addRole = async () => {
+
     try {
-      const response = await axios.post("https://localhost:5001/api/FoodCategory", {
-        categoryName,
+      const response = await axios.post("https://localhost:5001/api/Roles", {
+        roleName,
       }, config);
     } catch (err) {
       alert("Something went wrong");
@@ -34,31 +35,31 @@ function AddFoodCategories() {
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        Add Category
+        Add Role
       </Button>
 
       <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header>
-          <Modal.Title id="contained-modal-title-vcenter">Add Category</Modal.Title>
+          <Modal.Title id="contained-modal-title-vcenter">Add Role</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Row>
             <Col>
-              <Form onSubmit={addCategory}>
-                <Form.Group controlId="CategoryName">
-                  <Form.Label>Category Name</Form.Label>
+              <Form onSubmit={addRole}>
+                <Form.Group controlId="RoleName">
+                  <Form.Label>Role Name</Form.Label>
                   <Form.Control
                     type="text"
-                    name="CategoryName"
-                    onChange={(e) => setCategoryName(e.target.value)}
+                    name="roleName"
+                    onChange={(e) => setRoleName(e.target.value)}
                     required
-                    placeholder="Category Name"
+                    placeholder="Role Name"
                     autoFocus
                   />
                 </Form.Group>
                 <Form.Group className="mt-3">
                   <Button variant="primary" type="submit" >
-                    Add Category
+                    Add Role
                   </Button>
                 </Form.Group>
               </Form>
@@ -74,4 +75,4 @@ function AddFoodCategories() {
     </>
   );
 }
-export default AddFoodCategories;
+export default AddRoles;

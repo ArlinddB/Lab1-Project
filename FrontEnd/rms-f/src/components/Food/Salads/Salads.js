@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, ButtonToolbar, Button, Pagination } from "react-bootstrap";
 import _ from "lodash";
-import AddEmployee from "./AddEmployee";
-import EditEmployee from "./EditEmployee";
-import SideBar from "../Sidebar/SideBar";
+import AddSalads from "./AddSalads";
+import EditSalads from "./EditSalads";
+import SideBar from "../../Sidebar/SideBar";
 
 const pageSize = 8;
 
-const ManageEmployee = () => {
+const Salads = () => {
   const [items, setItems] = useState();
   const [paginatedItems, setPaginatedItems] = useState();
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,7 +20,7 @@ const ManageEmployee = () => {
   }
 
   useEffect(() => {
-    axios.get("https://localhost:5001/api/Employee/", config)
+    axios.get("https://localhost:5001/api/Salad/", config)
     .then((res) => {
       setItems(res.data);
 
@@ -48,10 +48,10 @@ const ManageEmployee = () => {
     setPaginatedItems(paginatedItems);
   };
 
-  const deleteEmp = (empid) => {
+  const deleteSalad = (saladid) => {
     if (window.confirm("Are you sure?")) {
       axios
-        .delete("https://localhost:5001/api/employee/" + empid, config)
+        .delete("https://localhost:5001/api/Salad/" + saladid, config)
         .then(() => window.location.reload());
     }
   };
@@ -60,7 +60,7 @@ const ManageEmployee = () => {
     <>
       <SideBar />
 
-      <div className="container col-sm-9 mt-4">
+      <div className="container col-sm-7 mt-4">
         {!paginatedItems ? (
           <h1>No Data</h1>
         ) : (
@@ -68,38 +68,32 @@ const ManageEmployee = () => {
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Username</th>
-                  <th>Password</th>
-                  <th>Phone</th>
-                  <th>Address</th>
-                  <th>Date of Joining</th>
-                  <th>Role Id</th>
-                  <th>Role Name</th>
+                  <th>Salad Id</th>
+                  <th>Salad Name</th>
+                  <th>Salad Price</th>
+                  <th>Salad Description</th>
+                  <th>Category Id</th>
+                  <th>Category Name</th>
                   <th>Options</th>
                 </tr>
               </thead>
               <tbody>
                 {paginatedItems.map((item, index) => (
                   <tr key={index}>
-                    <td>{item.e_id}</td>
-                    <td>{item.e_name}</td>
-                    <td>{item.e_username}</td>
-                    <td>{item.e_password}</td>
-                    <td>{item.e_phone}</td>
-                    <td>{item.e_address}</td>
-                    <td>{item.dateOfJoining}</td>
-                    <td>{item.role.roleId}</td>
-                    <td>{item.role.roleName}</td>
+                    <td>{item.saladId}</td>
+                    <td>{item.saladName}</td>
+                    <td>{item.saladPrice}</td>
+                    <td>{item.saladDescription}</td>
+                    <td>{item.categoryId}</td>
+                    <td>{item.category.categoryName}</td>
                     <td>
                       <ButtonToolbar>
-                        <EditEmployee ajdi={item.e_id} />
+                        <EditSalads ajdi={item.saladId} />
 
                         <Button
                           className="ml-2"
                           variant="danger"
-                          onClick={() => deleteEmp(item.e_id)}
+                          onClick={() => deleteSalad(item.saladId)}
                         >
                           Delete
                         </Button>
@@ -110,7 +104,7 @@ const ManageEmployee = () => {
               </tbody>
             </Table>
             <ButtonToolbar>
-              <AddEmployee />
+              <AddSalads />
             </ButtonToolbar>
           </>
         )}
@@ -130,4 +124,4 @@ const ManageEmployee = () => {
   );
 };
 
-export default ManageEmployee;
+export default Salads;

@@ -1,26 +1,37 @@
 import { NavLink } from "react-router-dom";
-import { FaBars, FaHome, FaUser, FaUserCog, FaUtensils } from "react-icons/fa";
+import {
+  FaBars,
+  FaHome,
+  FaUser,
+  FaUserCog,
+  FaUtensils,
+  FaHamburger,
+} from "react-icons/fa";
 
-import { BiDrink, BiTask } from "react-icons/bi";
+import {
+  BiDrink,
+  BiTask,
+  BiCategoryAlt,
+  BiChair,
+  BiPowerOff,
+} from "react-icons/bi";
+import { GiShrimp, GiCoffeeCup, GiSodaCan } from "react-icons/gi";
+import { MdLocalDrink } from "react-icons/md";
+import { BsCalendarDate } from "react-icons/bs";
 
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
+
 import { AnimatePresence, motion } from "framer-motion";
 import SidebarMenu from "./SidebarMenu";
+
+
+
 const routes = [
   {
-    path: "/",
-    name: "Home",
+    path: "/dashboard",
+    name: "Dashboard",
     icon: <FaHome />,
-  },
-  {
-    path: "/food",
-    name: "Food",
-    icon: <FaUtensils />,
-  },
-  {
-    path: "/drinks",
-    name: "Drinks",
-    icon: <BiDrink />,
   },
   {
     path: "/",
@@ -39,14 +50,85 @@ const routes = [
         icon: <FaUserCog />,
       },
       {
-        path: "/manage/food",
-        name: "Food",
+        path: "/tables",
+        name: "Tables ",
+        icon: <BiChair />,
+      },
+      {
+        path: "/reservation",
+        name: "Reservation ",
+        icon: <BsCalendarDate />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    name: "Food",
+    icon: <FaUtensils />,
+    exact: true,
+    subRoutes: [
+      {
+        path: "/foodcategories",
+        name: "Food Categories",
+        icon: <BiCategoryAlt />,
+      },
+      {
+        path: "/pasta",
+        name: "Pasta",
         icon: <FaUtensils />,
       },
       {
-        path: "/manage/drinks",
-        name: "Drinks",
+        path: "/seafood",
+        name: "Sea Food",
+        icon: <GiShrimp />,
+      },
+      {
+        path: "/fastfood",
+        name: "Fast Food",
+        icon: <FaHamburger />,
+      },
+      {
+        path: "/traditionalfood",
+        name: "Traditional Food",
+        icon: <FaUtensils />,
+      },
+      {
+        path: "/salads",
+        name: "Salads",
+        icon: <FaUtensils />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    name: "Drinks",
+    icon: <BiDrink />,
+    exact: true,
+    subRoutes: [
+      {
+        path: "/drinkcategories",
+        name: "Drink Categories",
+        icon: <BiCategoryAlt />,
+      },
+      {
+        path: "/alcoholicdrinks",
+        name: "Alcoholic Drinks",
         icon: <BiDrink />,
+      },
+      {
+        path: "/nonalcoholicdrinks",
+        name: "Non Alcoholic Drinks",
+        icon: <MdLocalDrink />,
+      },
+      {
+        path: "/hotdrinks",
+        name: "Hot Drinks",
+        icon: <GiCoffeeCup />,
+      },
+      {
+        path: "/colddrinks",
+        name: "Cold Drinks",
+        icon: <GiSodaCan />,
       },
     ],
   },
@@ -73,6 +155,14 @@ const SideBar = ({ children }) => {
     },
   };
 
+  const history = useHistory();
+
+  const logOut = () => {
+    localStorage.removeItem("token");
+    history.push("/");
+    window.location.reload()
+  }
+
   return (
     <>
       <div className="main-container">
@@ -98,7 +188,7 @@ const SideBar = ({ children }) => {
                   exit="hidden"
                   className="logo"
                 >
-                  <a href='/'>RMS</a>
+                  <a href="/">RMS</a>
                 </motion.h1>
               )}
             </AnimatePresence>
@@ -107,7 +197,7 @@ const SideBar = ({ children }) => {
               <FaBars onClick={toggle} />
             </div>
           </div>
-          
+
           <section className="routes">
             {routes.map((route, index) => {
               if (route.subRoutes) {
@@ -145,6 +235,20 @@ const SideBar = ({ children }) => {
                 </NavLink>
               );
             })}
+            <AnimatePresence>
+              <BiPowerOff className="icon logoutBtn" onClick={logOut}/>
+              {isOpen && (
+                <motion.div
+                  variants={showAnimation}
+                  initial="hidden"
+                  animate="show"
+                  exit="hidden"
+                  className="link_text"
+                >
+                  <p className="logout_text" onClick={logOut}>Logout</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </section>
         </motion.div>
 

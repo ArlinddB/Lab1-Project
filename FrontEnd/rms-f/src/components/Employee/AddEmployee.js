@@ -19,6 +19,13 @@ function AddEmployee() {
     const [roleId, setRoleId] = useState();
 
 
+    const config = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    }
+
+
     const addEmp = async () => {
       try {
         const response = await axios.post("https://localhost:5001/api/employee/", {
@@ -29,7 +36,7 @@ function AddEmployee() {
           e_address,
           dateOfJoining,
           roleId,
-        });
+        }, config);
       } catch (err) {
         alert(err);
       }

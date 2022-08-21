@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 
 import axios from "axios";
 
-function EditFoodCategories(props) {   
+function EditRoles(props) {   
 
   const [ajdi] = useState(props.ajdi);
 
@@ -16,7 +16,7 @@ function EditFoodCategories(props) {
   const handleShow = () => setShow(true);
   
 
-  const [categoryName, setCategoryName] = useState({});
+  const [roleName, setRoleName] = useState({});
 
   const config = {
     headers: {
@@ -24,20 +24,22 @@ function EditFoodCategories(props) {
     }
   }
 
+
   useEffect(async () => {
     const response = await axios.get(
-      `https://localhost:5001/api/FoodCategory/${ajdi}`, config
+      `https://localhost:5001/api/Roles/${ajdi}`, config
     );
-    setCategoryName(response.data);
-
+    setRoleName(response.data);
   }, []);
 
-  const editCategory = async () => {
+  console.log(roleName);
+
+  const editRole = async () => {
     try {
       const response = await axios.put(
-        `https://localhost:5001/api/FoodCategory/${ajdi}`,
+        `https://localhost:5001/api/Roles/${ajdi}`,
         {
-          categoryName,
+          roleName
         }, config
       );
     } catch (error) {
@@ -48,7 +50,7 @@ function EditFoodCategories(props) {
   return (
     <>
       
-      {categoryName && (
+      {roleName && (
         <>
           <Button variant="primary" onClick={handleShow}>
             Edit
@@ -62,31 +64,32 @@ function EditFoodCategories(props) {
           >
             <Modal.Header>
               <Modal.Title id="contained-modal-title-vcenter">
-                Add Category
+                Edit Role
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Row onSubmit={editCategory}> 
+              <Row onSubmit={editRole}> 
                 <Col>
                   <Form>
-                  <Form.Group controlId="CategoryId">
-                      <Form.Label>Category Id</Form.Label>
+                  <Form.Group controlId="RoleId">
+                      <Form.Label>Role Id</Form.Label>
                       <Form.Control
                         value={ajdi}
                         disabled
-                        name="name"
+                        name="roleId"
                         type="text"
-                        placeholder="Category Id"
+                        placeholder="Role Id"
                     />
                     </Form.Group>
-                    <Form.Group controlId="CategoryName">
-                      <Form.Label>Category Name</Form.Label>
+                    <Form.Group controlId="RoleName">
+                      <Form.Label>Role Name</Form.Label>
                       <Form.Control
-                        value={categoryName.categoryName}
-                        onChange={(e) => setCategoryName(e.target.value)}
-                        name="name"
+                        value={roleName.roleName}
+                        onChange={(e) => setRoleName(e.target.value)}
+                        name="roleName"
                         type="text"
-                        placeholder="Category Name"
+                        placeholder="Role Name"
+                        
                     />
                     </Form.Group>
                     <Form.Group className="mt-3">
@@ -94,7 +97,7 @@ function EditFoodCategories(props) {
                         variant="primary"
                         type="submit"
                       >
-                        Update Category
+                        Update Role
                       </Button>
                     </Form.Group>
                   </Form>
@@ -113,4 +116,4 @@ function EditFoodCategories(props) {
   );
 }
 
-export default EditFoodCategories;
+export default EditRoles;

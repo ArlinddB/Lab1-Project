@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Row, Col, Form } from "react-bootstrap";
-import { useHistory, useParams } from "react-router-dom";
 
 import axios from "axios";
 
@@ -20,19 +19,15 @@ function EditEmployee(props) {
   const [dateOfJoining, setDateOfJoining] = useState();
   const [roleId, setRoleId] = useState();
 
-  //   useEffect(async () => {
-  //     const response = await axios.get(
-  //       `https://localhost:5001/api/Employee/${ajdi}`
-  //     );
-  //     setE_name(response.data);
-  //   }, []);
-
-  const [employee, setEmployee] = useState({});
-
+  const config = {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  }
 
   useEffect( () => {
     axios.get(
-      `https://localhost:5001/api/Employee/${ajdi}`)
+      `https://localhost:5001/api/Employee/${ajdi}`, config)
       .then((response) => {
        // setE_id(response.data.e_id)
         setE_name(response.data.e_name);
@@ -64,7 +59,7 @@ function EditEmployee(props) {
   const editEmp = async () => {
     try {
       const response = await axios.put(
-        `https://localhost:5001/api/Employee/${ajdi}`, data
+        `https://localhost:5001/api/Employee/${ajdi}`, data, config
       );
     } catch (error) {
       console.log(error.response);
@@ -74,7 +69,7 @@ function EditEmployee(props) {
 
   return (
     <>
-      {employee && (
+      {setE_name && (
         <>
           <Button variant="primary" onClick={handleShow}>
             Edit
@@ -188,7 +183,7 @@ function EditEmployee(props) {
                         variant="primary"
                         type="submit"
                       >
-                        Update Category
+                        Update Employee
                       </Button>
                     </Form.Group>
                   </Form>
