@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantManagementSystem.Data;
 using RestaurantManagementSystem.Models.FoodModels;
 
 namespace RestaurantManagementSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class FoodCategoryController : Controller
     {
         private readonly DataContext _context;

@@ -12,12 +12,13 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using RestaurantManagementSystem.Dtos;
+using RestaurantManagementSystem.Data;
 
 namespace RestaurantManagementSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
 
     public class EmployeeController : ControllerBase
     {

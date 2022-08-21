@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantManagementSystem.Data;
+using RestaurantManagementSystem.Dtos.FoodDto;
 using RestaurantManagementSystem.Models.FoodModels;
 
 namespace RestaurantManagementSystem.Controllers.FoodControllers
@@ -26,37 +28,43 @@ namespace RestaurantManagementSystem.Controllers.FoodControllers
         [HttpGet("{foodId}")]
         public async Task<ActionResult<List<FastFood>>> GetById(int foodId)
         {
-            var fastFood = await _context.FastFoods.FirstOrDefaultAsync(c => c.FoodId == foodId);
+            var fastFood = await _context.FastFoods.Include(c => c.category).FirstOrDefaultAsync(c => c.FoodId == foodId);
             return Ok(fastFood);
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<FastFood>>> AddFastFood(FastFood fastFood)
+        public async Task<ActionResult<List<FastFood>>> AddFastFood(InsertFastFoodDto fastFoodDto)
         {
-            if (fastFood == null)
+            if (fastFoodDto == null)
                 return BadRequest("Failed");
 
-            _context.Entry(fastFood.category).State = EntityState.Unchanged;
-            _context.FastFoods.Add(fastFood);
+            var fastfood = new FastFood
+            {
+                FoodName = fastFoodDto.FoodName,
+                FoodPrice = fastFoodDto.FoodPrice,
+                FoodDescription = fastFoodDto.FoodDescription,
+                categoryId = fastFoodDto.categoryId
+            };
+
+            _context.FastFoods.Add(fastfood);
             await _context.SaveChangesAsync();
 
             return Ok("Added successfuly");
         }
 
         [HttpPut("{foodId}")]
-        public async Task<ActionResult<List<FastFood>>> UpdateFastFood(int foodId, FastFood fastFood)
+        public async Task<ActionResult<List<FastFood>>> UpdateFastFood(int foodId, InsertFastFoodDto fastFoodDto)
         {
             var update = await _context.FastFoods.FirstOrDefaultAsync(c => c.FoodId == foodId);
             if (update == null)
                 return BadRequest("Food not found");
 
-            update.FoodName = fastFood.FoodName;
-            update.FoodPrice = fastFood.FoodPrice;
-            update.categoryId = fastFood.categoryId;
-            update.FoodDescription = fastFood.FoodDescription;
-            update.categoryId = fastFood.categoryId;
-            update.category = fastFood.category;
+            update.FoodName = fastFoodDto.FoodName;
+            update.FoodPrice = fastFoodDto.FoodPrice;
+            update.FoodDescription = fastFoodDto.FoodDescription;
+            update.categoryId = fastFoodDto.categoryId;
 
+            _context.FastFoods.Update(update);
             await _context.SaveChangesAsync();
 
             return Ok("Updated successfuly");

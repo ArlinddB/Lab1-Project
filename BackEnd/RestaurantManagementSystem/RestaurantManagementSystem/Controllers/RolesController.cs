@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantManagementSystem.Data;
 using RestaurantManagementSystem.Models;
 
 namespace RestaurantManagementSystem.Controllers
@@ -14,13 +15,13 @@ namespace RestaurantManagementSystem.Controllers
     [Authorize]
     public class RolesController : ControllerBase
     {
-        private readonly DataContext _context;
+            private readonly DataContext _context;
 
 
-        public RolesController(DataContext context)
-        {
-            _context = context;
-        }
+            public RolesController(DataContext context)
+            {
+                _context = context;
+            }
 
         [HttpGet]
 
@@ -29,7 +30,15 @@ namespace RestaurantManagementSystem.Controllers
             var roles = await _context.Roles.ToListAsync();
             return Ok(roles);
         }
-       
+
+        [HttpGet("{roleId}")]
+        public async Task<ActionResult<List<Roles>>> GetByRoleId(int roleId)
+        {
+            var roles = await _context.Roles.FirstOrDefaultAsync(c  => c.roleId == roleId);
+            return Ok(roles);
+        }
+
+
         [HttpPost]
         public async Task<ActionResult<List<Roles>>> AddRole(Roles role)
         {
@@ -41,14 +50,14 @@ namespace RestaurantManagementSystem.Controllers
         }
 
 
-        [HttpPut]
-        public async Task<ActionResult<List<Roles>>> UpdateHero(Roles role)
+        [HttpPut("{roleId}")]
+        public async Task<ActionResult<List<Roles>>> UpdateRole(int roleId, Roles role)
         {
-            var roleUpdate = await _context.Roles.FindAsync(role.r_id);
+            var roleUpdate = await _context.Roles.FirstOrDefaultAsync(c => c.roleId == roleId);
             if (roleUpdate == null)
                 return BadRequest("Role not found.");
 
-            roleUpdate.r_name = role.r_name;
+            roleUpdate.roleName = role.roleName;
             
 
             await _context.SaveChangesAsync();
@@ -57,7 +66,7 @@ namespace RestaurantManagementSystem.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Roles>>> DeleteHero(int id)
+        public async Task<ActionResult<List<Roles>>> DeleteRole(int id)
         {
             var roleDelete = await _context.Roles.FindAsync(id);
             if (roleDelete == null)

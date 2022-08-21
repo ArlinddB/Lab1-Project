@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantManagementSystem.Data;
+using RestaurantManagementSystem.Dtos.FoodDto;
 using RestaurantManagementSystem.Models.FoodModels;
 
 namespace RestaurantManagementSystem.Controllers.FoodControllers
@@ -26,17 +28,24 @@ namespace RestaurantManagementSystem.Controllers.FoodControllers
         [HttpGet("{foodId}")]
         public async Task<ActionResult<List<Pasta>>> GetById(int foodId)
         {
-            var pasta = await _context.Pastas.FirstOrDefaultAsync(c => c.FoodId == foodId);
+            var pasta = await _context.Pastas.Include(c => c.category).FirstOrDefaultAsync(c => c.FoodId == foodId);
             return Ok(pasta);
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Pasta>>> AddPasta(Pasta pasta)
+        public async Task<ActionResult<List<Pasta>>> AddPasta(InsertPastaDto pastaDto)
         {
-            if (pasta == null)
+            if (pastaDto == null)
                 return BadRequest("Failed");
 
-            _context.Entry(pasta.category).State = EntityState.Unchanged;
+            var pasta = new Pasta
+            {
+                FoodName = pastaDto.FoodName,
+                FoodPrice = pastaDto.FoodPrice,
+                FoodDescription = pastaDto.FoodDescription,
+                categoryId = pastaDto.categoryId
+            };
+
             _context.Pastas.Add(pasta);
             await _context.SaveChangesAsync();
 
@@ -44,19 +53,19 @@ namespace RestaurantManagementSystem.Controllers.FoodControllers
         }
 
         [HttpPut("{foodId}")]
-        public async Task<ActionResult<List<Pasta>>> UpdatePasta(int foodId, Pasta pasta)
+        public async Task<ActionResult<List<Pasta>>> UpdatePasta(int foodId, InsertPastaDto pastaDto)
         {
             var update = await _context.Pastas.FirstOrDefaultAsync(c => c.FoodId == foodId);
             if (update == null)
                 return BadRequest("Food not found");
 
-            update.FoodName = pasta.FoodName;
-            update.FoodPrice = pasta.FoodPrice;
-            update.categoryId = pasta.categoryId;
-            update.FoodDescription = pasta.FoodDescription;
-            update.categoryId = pasta.categoryId;
-            update.category = pasta.category;
+            update.FoodName = pastaDto.FoodName;
+            update.FoodPrice = pastaDto.FoodPrice;
+            update.categoryId = pastaDto.categoryId;
+            update.FoodDescription = pastaDto.FoodDescription;
+            update.categoryId = pastaDto.categoryId;
 
+            _context.Pastas.Update(update);
             await _context.SaveChangesAsync();
 
             return Ok("Updated successfuly");

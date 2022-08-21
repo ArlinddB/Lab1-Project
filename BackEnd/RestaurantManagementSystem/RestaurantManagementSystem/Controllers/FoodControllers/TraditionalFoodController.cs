@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantManagementSystem.Data;
+using RestaurantManagementSystem.Dtos.FoodDto;
 using RestaurantManagementSystem.Models.FoodModels;
 
 namespace RestaurantManagementSystem.Controllers.FoodControllers
@@ -26,37 +28,45 @@ namespace RestaurantManagementSystem.Controllers.FoodControllers
         [HttpGet("{foodId}")]
         public async Task<ActionResult<List<TraditionalFood>>> GetById(int foodId)
         {
-            var traditional = await _context.TraditionalFoods.FirstOrDefaultAsync(c => c.FoodId == foodId);
+            var traditional = await _context.TraditionalFoods.Include(c => c.category).FirstOrDefaultAsync(c => c.FoodId == foodId);
             return Ok(traditional);
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<TraditionalFood>>> AddTraditonalFood(TraditionalFood traditionalFood)
+        public async Task<ActionResult<List<TraditionalFood>>> AddTraditonalFood(InsertTraditionalFoodDto traditionalFoodDto)
         {
-            if (traditionalFood == null)
+            if (traditionalFoodDto == null)
                 return BadRequest("Failed");
 
-            _context.Entry(traditionalFood.category).State = EntityState.Unchanged;
-            _context.TraditionalFoods.Add(traditionalFood);
+            var traditionalfood = new TraditionalFood
+            {
+                FoodName = traditionalFoodDto.FoodName,
+                FoodPrice = traditionalFoodDto.FoodPrice,
+                FoodDescription = traditionalFoodDto.FoodDescription,
+                categoryId = traditionalFoodDto.categoryId
+            };
+
+
+            _context.TraditionalFoods.Add(traditionalfood);
             await _context.SaveChangesAsync();
 
             return Ok("Added successfuly");
         }
 
         [HttpPut("{foodId}")]
-        public async Task<ActionResult<List<TraditionalFood>>> UpdateTraditionalFood(int foodId, TraditionalFood traditionalFood)
+        public async Task<ActionResult<List<TraditionalFood>>> UpdateTraditionalFood(int foodId, InsertTraditionalFoodDto traditionalFoodDto)
         {
             var update = await _context.TraditionalFoods.FirstOrDefaultAsync(c => c.FoodId == foodId);
             if (update == null)
                 return BadRequest("Food not found");
 
-            update.FoodName = traditionalFood.FoodName;
-            update.FoodPrice = traditionalFood.FoodPrice;
-            update.categoryId = traditionalFood.categoryId;
-            update.FoodDescription = traditionalFood.FoodDescription;
-            update.categoryId = traditionalFood.categoryId;
-            update.category = traditionalFood.category;
+            update.FoodName = traditionalFoodDto.FoodName;
+            update.FoodPrice = traditionalFoodDto.FoodPrice;
+            update.categoryId = traditionalFoodDto.categoryId;
+            update.FoodDescription = traditionalFoodDto.FoodDescription;
+            update.categoryId = traditionalFoodDto.categoryId;
 
+            _context.TraditionalFoods.Update(update);
             await _context.SaveChangesAsync();
 
             return Ok("Updated successfuly");
