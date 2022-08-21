@@ -1,32 +1,75 @@
-import React, { Component } from "react";
-import {Button, Col, Form} from 'react-bootstrap';
+import React, { useState } from "react";
+import { Button, Col, Form } from "react-bootstrap";
+import axios from "axios";
+import { Link, useHistory } from "react-router-dom";
 
-export class Login extends Component{
-    render(){
-        return(
-            <>
-                <div className="container d-flex justify-content-center align-items-center loginContainer">
-                
-                    <Col centered>
-                        <Form>
-                            <Form.Group className="mb-3" controlId="formBasicEmail" size="sm">
-                                <Form.Label>Email address</Form.Label>
-                                <Form.Control type="email" id="email" placeholder="Enter email" required/>
-                            </Form.Group>
+const Login = () => {
+  const [input, setInput] = useState({});
 
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control type="password" id="password" placeholder="Password" required/>
-                            </Form.Group>
-                         
-                            <Button type="submit" id="loginBtn" className="btn btn-primary btn-block loginBtn">
-                                Submit
-                            </Button>       
-                        </Form>
-                    </Col>
-                
-                </div>
-            </>
-        )
+  const history = useHistory();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInput({ ...input, [name]: value });
+  };
+
+ 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post("https://localhost:5001/api/Authenticate/login/", {
+        ...input,
+      });
+      localStorage.setItem("token", res.data.token);
+      history.push("/dashboard");
+      window.location.reload()
+    } catch (err) {
+      alert("Incorrect email/passsword");
     }
-}
+  };
+  
+
+  return (
+    <>
+      <div className="container d-flex justify-content-center align-items-center loginContainer">
+        <Col>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type="text"
+                name="username"
+                placeholder="Enter username"
+                required
+                onChange={handleChange}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+                onChange={handleChange}
+              />
+            </Form.Group>
+
+            <Button
+              type="submit"
+              id="loginBtn"
+              className="btn btn-primary btn-block loginBtn"
+            >
+              Login
+            </Button>
+          </Form>
+        </Col>
+        
+      </div>
+    </>
+  );
+};
+export default Login;
