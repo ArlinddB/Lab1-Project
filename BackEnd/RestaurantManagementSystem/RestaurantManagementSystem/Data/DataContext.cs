@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using RestaurantManagementSystem.Models;
+using RestaurantManagementSystem.Models.OrderModels;
 using RestaurantManagementSystem.Models.DrinksModels;
 using RestaurantManagementSystem.Models.FoodModels;
 using RestaurantManagementSystem.Models.ReservationModel;
@@ -41,6 +42,8 @@ namespace RestaurantManagementSystem.Data
         public DbSet<Reservation> Reservations { get; set; }
 
         public DbSet<Salad> Salads { get; set; }
-       
+        public DbSet<OrderMaster> OrderMasters { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+
     }
 }
