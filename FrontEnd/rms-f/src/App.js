@@ -29,6 +29,7 @@ import set from "lodash.set";
 
 import { HalfMalf } from "react-spinner-animated";
 import "react-spinner-animated/dist/index.css";
+import Order from "./components/Orders/index";
 
 
 function App() {
@@ -81,7 +82,8 @@ function App() {
               <Route path="/hotdrinks" component={HotDrinks} />
               <Route path="/tables" component={Tables} />
               <Route path="/reservation" component={Reservation} />
-              
+              <Route path="/order" component={Order} />
+
             </>
 
           )}

@@ -16,7 +16,7 @@ import {
   BiPowerOff,
 } from "react-icons/bi";
 import { GiShrimp, GiCoffeeCup, GiSodaCan } from "react-icons/gi";
-import { MdLocalDrink } from "react-icons/md";
+import { MdLocalDrink, MdBorderColor } from "react-icons/md";
 import { BsCalendarDate } from "react-icons/bs";
 
 import { useState } from "react";
@@ -132,6 +132,11 @@ const routes = [
       },
     ],
   },
+  {
+    path: "orders",
+    name: "Orders",
+    icon: <MdBorderColor />
+  }
 ];
 
 const SideBar = ({ children }) => {
@@ -188,7 +193,7 @@ const SideBar = ({ children }) => {
                   exit="hidden"
                   className="logo"
                 >
-                  <a href="/">RMS</a>
+                  <a href="/dashboard">RMS</a>
                 </motion.h1>
               )}
             </AnimatePresence>
