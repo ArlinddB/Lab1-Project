@@ -105,7 +105,7 @@ namespace RestaurantManagementSystem.Controllers
             _context.Employees.Remove(empDelete);
             await _context.SaveChangesAsync();
 
-            return Ok("Deleted successfuly");
+            return Ok("Deleted");
         }
     }
 }
